@@ -15,21 +15,23 @@
           show-word-limit
           :maxlength="500"
         ></el-input>
-        <el-button
-          v-if="ocr"
-          type="text"
-          class="pic-select-wrapper"
-          icon="el-icon-picture"
-          @click="clickPic"
-        >
-          <input
-            type="file"
-            ref="inputFile"
-            class="pic-select"
-            @change="selectPic"
-            accept=".png, .jpg"
-          />
-        </el-button>
+        <div class="button-container">
+          <el-button
+            class="pic-select-wrapper"
+            v-if="ocr"
+            type="text"
+            icon="el-icon-picture"
+            @click="clickPic"
+          >
+            <input
+              type="file"
+              ref="inputFile"
+              class="pic-select"
+              @change="selectPic"
+              accept=".png, .jpg"
+            />
+          </el-button>
+        </div>
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
       <el-col v-bind="span">
@@ -222,5 +224,13 @@ body {
 
 .pic-select {
   opacity: 0;
+}
+
+.button-container {
+  position: relative;
+  top: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
 }
 </style>
