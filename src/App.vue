@@ -72,6 +72,7 @@ export default {
     }, [])
       .sort((a, b) => b.text.length - a.text.length)
     return {
+      loading: null,
       ocr: null,
       source: 'Muhe ye! Nini zido!',
       arrayTypeDirectory
@@ -111,19 +112,34 @@ export default {
       this.$refs.inputFile.click()
     },
     async selectPic (e) {
-      const loading = Loading.service({ fullscreen: true })
+      this.loading = Loading.service({ fullscreen: true })
       const pic = e.target.files[0]
       e.target.value = ''
       const { data: { text } } = await this.ocr.recognize(pic)
       this.source = text
       // await this.ocr.terminate()
-      loading.close()
+      this.loading.close()
+      this.loading = null
     }
   },
   async created () {
+    const vm = this
     const ocr = createWorker({
       langPath: `${process.env.BASE_URL}`,
-      logger: m => console.log(m)
+      logger: function (message) {
+        switch (message.status) {
+          case 'recognizing text': {
+            if (vm.loading) {
+              const progress = message.progress * 100
+              vm.loading.text = `正在获取文字${progress.toFixed(0)}%`
+            }
+            break
+          }
+          default: {
+            break
+          }
+        }
+      }
     })
     await ocr.load()
     await ocr.loadLanguage('eng+chi_sim')
