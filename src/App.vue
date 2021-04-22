@@ -56,14 +56,24 @@ export default {
       }, {})
     },
     result ({ source, arrayTypeDirectory, md5Directory }) {
-      return arrayTypeDirectory.reduce((text, dir) => {
-        return text.replace(dir.text, dir.md5)
-      }, source)
+      return arrayTypeDirectory
+        // 将可以替换的部分替换为词典对象的md5
+        .reduce((text, dir) => {
+          return text.replace(dir.text, dir.md5)
+        }, source)
         .split(' ')
         .map(item => {
-          const data = { ...md5Directory[item.replace('!', '')] }
-          data.text += item.replace(/\w/g, '')
-          return data
+          const key = item.replace('!', '')
+          if (key in md5Directory) {
+            const data = { ...md5Directory[key] }
+            data.text += item.replace(/\w/g, '')
+            return data
+          } else {
+            return {
+              text: item,
+              meaning: [item]
+            }
+          }
         })
     }
   }
