@@ -35,7 +35,7 @@
       <el-col :span="12">
         <div v-for="(line, index) of result" :key="index">
           <el-tooltip
-            :key="words.text"
+            :key="words.text + index"
             class="item"
             effect="dark"
             placement="bottom"
@@ -116,7 +116,7 @@ export default {
       e.target.value = ''
       const { data: { text } } = await this.ocr.recognize(pic)
       this.source = text
-      await this.ocr.terminate()
+      // await this.ocr.terminate()
       loading.close()
     }
   },
