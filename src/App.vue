@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-row>
+    <el-row :gutter="8">
       <el-col :span="12">
         <el-input type="textarea" v-model="source" />
       </el-col>
@@ -18,9 +18,6 @@
             </div>
             <span class="text">{{ dir.text }}</span>
           </el-tooltip>
-        </div>
-        <div>
-          <span :key="dir.text" v-for="dir of result">{{ dir.meaning[0] }}</span>
         </div>
       </el-col>
     </el-row>
