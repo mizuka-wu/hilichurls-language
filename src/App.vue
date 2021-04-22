@@ -11,7 +11,7 @@
             class="item"
             effect="dark"
             placement="bottom"
-            v-for="dir of text"
+            v-for="dir of result"
           >
             <div slot="content">
               <div :key="index" v-for="(meaning, index) of dir.meaning">{{ meaning }}</div>
@@ -20,7 +20,7 @@
           </el-tooltip>
         </div>
         <div>
-          <span :key="dir.text" v-for="dir of text">{{ dir.meaning[0] }}</span>
+          <span :key="dir.text" v-for="dir of result">{{ dir.meaning[0] }}</span>
         </div>
       </el-col>
     </el-row>
@@ -28,40 +28,40 @@
 </template>
 
 <script>
-import dir from './assets/directory.json'
+import directory from './assets/directory.json'
 import sparkMd5 from 'spark-md5'
 export default {
   name: 'App',
   data () {
-    const list = Object.keys(dir).reduce((_list, key) => {
+    const arrayTypeDirectory = Object.keys(directory).reduce((_arrayTypeDirectory, key) => {
       const md5 = sparkMd5.hash(key)
-      _list.push({
+      _arrayTypeDirectory.push({
         text: key,
         md5,
-        meaning: dir[key]
+        meaning: directory[key]
       })
-      return _list
+      return _arrayTypeDirectory
     }, [])
       .sort((a, b) => b.text.length - a.text.length)
     return {
       source: 'Muhe ye! Nini zido!',
-      list
+      arrayTypeDirectory
     }
   },
   computed: {
-    md5ToDir ({ list }) {
-      return list.reduce((obj, { md5, ...dir }) => {
+    md5Directory ({ arrayTypeDirectory }) {
+      return arrayTypeDirectory.reduce((obj, { md5, ...dir }) => {
         obj[md5] = dir
         return obj
       }, {})
     },
-    text ({ source, list, md5ToDir }) {
-      return list.reduce((text, dir) => {
+    result ({ source, arrayTypeDirectory, md5Directory }) {
+      return arrayTypeDirectory.reduce((text, dir) => {
         return text.replace(dir.text, dir.md5)
       }, source)
         .split(' ')
         .map(item => {
-          const data = { ...md5ToDir[item.replace('!', '')] }
+          const data = { ...md5Directory[item.replace('!', '')] }
           data.text += item.replace(/\w/g, '')
           return data
         })
