@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
     "spark-md5": "^3.0.1",
+    "tesseract.js": "^2.1.4",
     "vue": "^2.6.11"
   },
   "devDependencies": {

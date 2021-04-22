@@ -1,9 +1,9 @@
 <template>
   <el-card id="app">
-    <div slot="header" style="text-align: center;">
-      丘丘语
+    <div slot="header" class="header">
+      <div>丘丘语</div>
       <i class="el-icon-d-arrow-right" />
-      丘丘语（注释）
+      <div>丘丘语（注释）</div>
     </div>
     <el-row :gutter="8">
       <el-col :span="12">
@@ -15,6 +15,22 @@
           show-word-limit
           :maxlength="500"
         ></el-input>
+        <el-button
+          v-if="ocr"
+          type="text"
+          class="pic-select-wrapper"
+          icon="el-icon-picture"
+          @click="clickPic"
+        >
+          <input
+            type="file"
+            ref="inputFile"
+            class="pic-select"
+            @change="selectPic"
+            accept=".png, .jpg"
+          />
+        </el-button>
+        <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
       <el-col :span="12">
         <div v-for="(line, index) of result" :key="index">
@@ -39,6 +55,9 @@
 <script>
 import directory from './assets/directory.json'
 import sparkMd5 from 'spark-md5'
+import { createWorker } from 'tesseract.js'
+import { Loading } from 'element-ui'
+
 export default {
   name: 'App',
   data () {
@@ -53,6 +72,7 @@ export default {
     }, [])
       .sort((a, b) => b.text.length - a.text.length)
     return {
+      ocr: null,
       source: 'Muhe ye! Nini zido!',
       arrayTypeDirectory
     }
@@ -85,6 +105,30 @@ export default {
           }
         }))
     }
+  },
+  methods: {
+    clickPic () {
+      this.$refs.inputFile.click()
+    },
+    async selectPic (e) {
+      const loading = Loading.service({ fullscreen: true })
+      const pic = e.target.files[0]
+      e.target.value = ''
+      const { data: { text } } = await this.ocr.recognize(pic)
+      this.source = text
+      await this.ocr.terminate()
+      loading.close()
+    }
+  },
+  async created () {
+    const ocr = createWorker({
+      langPath: `${process.env.BASE_URL}/assets/eng.traineddata.gz`,
+      logger: m => console.log(m)
+    })
+    await ocr.load()
+    await ocr.loadLanguage('eng')
+    await ocr.initialize('eng')
+    this.ocr = ocr
   }
 }
 </script>
@@ -105,6 +149,12 @@ body {
   max-width: 900px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .el-card__body {
   height: 200px;
 }
@@ -115,6 +165,7 @@ body {
 
 .el-col {
   height: 100%;
+  padding-bottom: 30px;
 }
 
 .el-col textarea {
@@ -133,5 +184,14 @@ body {
   color: #fff;
   background: #000;
   cursor: pointer;
+}
+
+.pic-select-wrapper {
+  overflow: hidden;
+  width: 20px;
+}
+
+.pic-select {
+  opacity: 0;
 }
 </style>
