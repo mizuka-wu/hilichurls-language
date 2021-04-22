@@ -1,7 +1,9 @@
 <template>
   <el-card id="app">
     <div slot="header" style="text-align: center;">
+      丘丘语
       <i class="el-icon-d-arrow-right" />
+      丘丘语（注释）
     </div>
     <el-row :gutter="8">
       <el-col :span="12">
@@ -15,18 +17,18 @@
         ></el-input>
       </el-col>
       <el-col :span="12">
-        <div>
+        <div v-for="(line, index) of result" :key="index">
           <el-tooltip
-            :key="dir.text"
+            :key="words.text"
             class="item"
             effect="dark"
             placement="bottom"
-            v-for="dir of result"
+            v-for="words of line"
           >
             <div slot="content">
-              <div :key="index" v-for="(meaning, index) of dir.meaning">{{ meaning }}</div>
+              <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
             </div>
-            <span class="text">{{ dir.text }}</span>
+            <span class="text">{{ words.text }}</span>
           </el-tooltip>
         </div>
       </el-col>
@@ -63,11 +65,11 @@ export default {
       }, {})
     },
     result ({ source, arrayTypeDirectory, md5Directory }) {
-      return arrayTypeDirectory
+      return source.split('\n').map(sourceText => arrayTypeDirectory
         // 将可以替换的部分替换为词典对象的md5
         .reduce((text, dir) => {
           return text.replace(dir.text, dir.md5)
-        }, source)
+        }, sourceText)
         .split(' ')
         .map(item => {
           const key = item.replace('!', '')
@@ -81,7 +83,7 @@ export default {
               meaning: [item]
             }
           }
-        })
+        }))
     }
   }
 }
