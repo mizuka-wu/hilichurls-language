@@ -32,7 +32,7 @@
         </el-button>
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12" style="border-left: 1px solid #eeee;">
         <div v-for="(line, index) of result" :key="index">
           <el-tooltip
             :key="words.text + index"
