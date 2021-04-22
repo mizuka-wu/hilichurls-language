@@ -44,7 +44,7 @@
             <div slot="content">
               <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
             </div>
-            <span class="text">{{ words.text }}</span>
+            <span :class="{ text: true, hilichurls: words.isHilichurlsLang }">{{ words.text }}</span>
           </el-tooltip>
         </div>
       </el-col>
@@ -94,7 +94,7 @@ export default {
         .map(item => {
           const key = item.replace('!', '')
           if (key in md5Directory) {
-            const data = { ...md5Directory[key] }
+            const data = { ...md5Directory[key], isHilichurlsLang: true }
             data.text += item.replace(/\w/g, '')
             return data
           } else {
@@ -122,12 +122,12 @@ export default {
   },
   async created () {
     const ocr = createWorker({
-      langPath: `${process.env.BASE_URL}/assets/eng.traineddata.gz`,
+      langPath: `${process.env.BASE_URL}`,
       logger: m => console.log(m)
     })
     await ocr.load()
-    await ocr.loadLanguage('eng')
-    await ocr.initialize('eng')
+    await ocr.loadLanguage('eng+chi_sim')
+    await ocr.initialize('eng+chi_sim')
     this.ocr = ocr
   }
 }
@@ -165,7 +165,7 @@ body {
 
 .el-col {
   height: 100%;
-  padding-bottom: 30px;
+  padding-bottom: 24px;
 }
 
 .el-col textarea {
@@ -180,6 +180,11 @@ body {
   margin: 0px 4px;
   padding: 2px 1px;
 }
+
+.hilichurls {
+  border-bottom: 1px dashed #000;
+}
+
 .text:hover {
   color: #fff;
   background: #000;
