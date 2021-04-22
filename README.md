@@ -1,24 +1,39 @@
-# hilichurls-language
+# 如何获取最新的词典
 
-## Project setup
-```
-yarn install
-```
+[从b站wiki直接转](https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8)
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+```javascript
+      Array.from(document.querySelector('.toc-sticky').childNodes)
+        .slice(1)
+        .filter(item => item.tagName !== 'H2')
+        .reduce((directoryList, node) => {
+          switch (node.tagName) {
+            case 'P': {
+              break
+            }
+            case 'DIV': {
+              directoryList.push({
+                text: node.innerText
+              })
+              break
+            }
+            case 'UL': {
+              const latest = directoryList[directoryList.length - 1]
+              latest.meaning = Array.from(node.childNodes)
+                .map(subNode => subNode.innerText)
+                .filter(item => item)
+              break
+            }
+            default: {
+              break
+            }
+          }
 
-### Compiles and minifies for production
+          return directoryList
+        }, [])
+        .reduce((directory, { text, meaning }) => {
+          directory[text.toLowerCase()] = meaning
+          directory[text] = meaning
+          return directory
+        }, {})
 ```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
