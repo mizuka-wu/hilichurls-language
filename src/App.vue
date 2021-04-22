@@ -1,8 +1,18 @@
 <template>
-  <div id="app">
+  <el-card id="app">
+    <div slot="header" style="text-align: center;">
+      <i class="el-icon-d-arrow-right" />
+    </div>
     <el-row :gutter="8">
       <el-col :span="12">
-        <el-input type="textarea" v-model="source" />
+        <el-input
+          style="height: 100%;"
+          type="textarea"
+          v-model="source"
+          autosize
+          show-word-limit
+          :maxlength="500"
+        ></el-input>
       </el-col>
       <el-col :span="12">
         <div>
@@ -21,7 +31,7 @@
         </div>
       </el-col>
     </el-row>
-  </div>
+  </el-card>
 </template>
 
 <script>
@@ -78,6 +88,41 @@ export default {
 </script>
 
 <style>
+html,
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  margin: 0;
+  justify-content: center;
+}
+#app {
+  margin: 10px;
+  width: 100%;
+  height: 300px;
+  max-width: 900px;
+}
+
+.el-card__body {
+  height: 200px;
+}
+
+.el-row {
+  height: 100%;
+}
+
+.el-col {
+  height: 100%;
+}
+
+.el-col textarea {
+  height: 100%;
+  border: 0;
+  max-height: 100%;
+  overflow: auto;
+  resize: none;
+}
+
 .text {
   margin: 0px 4px;
   padding: 2px 1px;
