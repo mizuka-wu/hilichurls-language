@@ -57,6 +57,9 @@ import directory from './assets/directory.json'
 import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
+import opencv from 'opencv.js'
+
+console.log(opencv)
 
 export default {
   name: 'App',
