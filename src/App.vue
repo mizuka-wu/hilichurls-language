@@ -6,7 +6,7 @@
       <div>丘丘语（注释）</div>
     </div>
     <el-row :gutter="8">
-      <el-col :span="12">
+      <el-col v-bind="span">
         <el-input
           style="height: 100%;"
           type="textarea"
@@ -32,7 +32,7 @@
         </el-button>
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
-      <el-col :span="12" style="border-left: 1px solid #eeee;">
+      <el-col v-bind="span">
         <div v-for="(line, index) of result" :key="index">
           <el-tooltip
             :key="words.text + index"
@@ -72,6 +72,12 @@ export default {
     }, [])
       .sort((a, b) => b.text.length - a.text.length)
     return {
+      span: {
+        xs: 24,
+        sm: 24,
+        md: 12,
+        lg: 12
+      },
       loading: null,
       ocr: null,
       source: 'Muhe ye! Nini zido!',
@@ -152,7 +158,6 @@ export default {
 <style>
 html,
 body {
-  height: 100%;
   width: 100%;
   display: flex;
   margin: 0;
@@ -161,7 +166,7 @@ body {
 #app {
   margin: 10px;
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   max-width: 900px;
 }
 
