@@ -1,9 +1,6 @@
 <template>
   <el-card id="app">
-    <div
-      class="header"
-      slot="header"
-    >
+    <div class="header" slot="header">
       <div>丘丘语</div>
       <i class="el-icon-d-arrow-right" />
       <div>丘丘语（注释）</div>
@@ -37,14 +34,8 @@
         </div>
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
-      <el-col
-        class="result"
-        v-bind="span"
-      >
-        <span
-          :key="index"
-          v-for="(segment, index) of result"
-        >
+      <el-col class="result" v-bind="span">
+        <span :key="index" v-for="(segment, index) of result">
           <el-tooltip
             :key="words.text + index"
             class="item"
@@ -53,10 +44,7 @@
             v-for="words of segment.text"
           >
             <div slot="content">
-              <div
-                :key="index"
-                v-for="(meaning, index) of words.meaning"
-              >{{ meaning }}</div>
+              <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
             </div>
             <span :class="{ text: true, hilichurls: words.isHilichurlsLang }">{{ words.text }}</span>
           </el-tooltip>
@@ -82,7 +70,7 @@ import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
 
-const LANGUAGE = 'eng' // +chi_sim
+const LANGUAGE = 'eng+chi_sim'
 
 export default {
   name: 'App',
