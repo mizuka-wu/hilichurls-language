@@ -1,6 +1,9 @@
 <template>
   <el-card id="app">
-    <div slot="header" class="header">
+    <div
+      class="header"
+      slot="header"
+    >
       <div>丘丘语</div>
       <i class="el-icon-d-arrow-right" />
       <div>丘丘语（注释）</div>
@@ -8,34 +11,40 @@
     <el-row :gutter="8">
       <el-col v-bind="span">
         <el-input
+          :maxlength="500"
+          autosize
+          show-word-limit
           style="height: 100%;"
           type="textarea"
           v-model="source"
-          autosize
-          show-word-limit
-          :maxlength="500"
         ></el-input>
         <div class="button-container">
           <el-button
-            class="pic-select-wrapper"
-            v-if="ocr"
-            type="text"
-            icon="el-icon-picture"
             @click="clickPic"
+            class="pic-select-wrapper"
+            icon="el-icon-picture"
+            type="text"
+            v-if="ocr"
           >
             <input
-              type="file"
-              ref="inputFile"
-              class="pic-select"
               @change="selectPic"
-              accept=".png, .jpg"
+              accept=".png, .jpg, .jpeg"
+              class="pic-select"
+              ref="inputFile"
+              type="file"
             />
           </el-button>
         </div>
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
-      <el-col v-bind="span">
-        <div v-for="(line, index) of result" :key="index">
+      <el-col
+        class="result"
+        v-bind="span"
+      >
+        <div
+          :key="index"
+          v-for="(line, index) of result"
+        >
           <el-tooltip
             :key="words.text + index"
             class="item"
@@ -44,24 +53,34 @@
             v-for="words of line"
           >
             <div slot="content">
-              <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
+              <div
+                :key="index"
+                v-for="(meaning, index) of words.meaning"
+              >{{ meaning }}</div>
             </div>
             <span :class="{ text: true, hilichurls: words.isHilichurlsLang }">{{ words.text }}</span>
           </el-tooltip>
         </div>
       </el-col>
     </el-row>
+    <canvas
+      height="300"
+      id="canvas"
+      style="position: fixed;left: 0;top: 0;z-index: 999;"
+      width="500"
+    />
   </el-card>
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import directory from './assets/directory.json'
 import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
-import opencv from 'opencv.js'
 
-console.log(opencv)
+const LANGUAGE = 'eng' // +chi_sim
 
 export default {
   name: 'App',
@@ -123,14 +142,46 @@ export default {
       this.$refs.inputFile.click()
     },
     async selectPic (e) {
+      const vm = this
       this.loading = Loading.service({ fullscreen: true })
       const pic = e.target.files[0]
       e.target.value = ''
-      const { data: { text } } = await this.ocr.recognize(pic)
-      this.source = text
-      // await this.ocr.terminate()
-      this.loading.close()
-      this.loading = null
+      const imageUrl = window.URL.createObjectURL(pic)
+      try {
+        const image = new MarvinImage()
+        image.load(imageUrl, async function () {
+          URL.revokeObjectURL(imageUrl)
+          const segments = Marvin.findTextRegions(image).filter(item => item.height >= 5)
+          vm.source = ''
+          for (const seg of segments) {
+            if (seg.height >= 5) {
+              const { data: { text } } = await vm.ocr.recognize(pic, {
+                rectangle: {
+                  top: seg.y1,
+                  left: seg.x1,
+                  width: seg.width,
+                  height: seg.height
+                }
+              })
+              if (text) {
+                vm.source += `${text}\n`
+              // image.drawRect(seg.x1, seg.y1 - 5, seg.width, seg.height + 10, 0xFFFF0000)
+              // image.drawRect(seg.x1 + 1, seg.y1 - 4, seg.width - 2, seg.height + 8, 0xFFFF0000)
+              }
+            }
+          }
+
+          // 画上去
+          // image.draw(document.querySelector('#canvas'))
+          vm.loading.close()
+          vm.loading = null
+        })
+      } catch (e) {
+        this.$message.error('获取文字失败')
+        URL.revokeObjectURL(imageUrl)
+        vm.loading.close()
+        vm.loading = null
+      }
     }
   },
   async created () {
@@ -153,8 +204,8 @@ export default {
       }
     })
     await ocr.load()
-    await ocr.loadLanguage('eng+chi_sim')
-    await ocr.initialize('eng+chi_sim')
+    await ocr.loadLanguage(LANGUAGE)
+    await ocr.initialize(LANGUAGE)
     this.ocr = ocr
   }
 }
@@ -232,5 +283,11 @@ body {
   height: 24px;
   display: flex;
   align-items: center;
+}
+
+.result {
+  height: 100%;
+  word-break: break-all;
+  overflow: auto;
 }
 </style>
