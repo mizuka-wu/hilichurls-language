@@ -8,6 +8,7 @@
       v-for="words of segmentWithTranslate.text"
     >
       <div slot="content">
+        {{ words.text }}
         <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
       </div>
       <span :class="{ text: true, hilichurls: !words.keepOrigin }">{{ words.text }}</span>
@@ -31,7 +32,12 @@ export default {
   },
   computed: {
     segmentWithTranslate ({ segment }) {
-      return segment
+      const { text, symbol } = segment
+      console.log(text)
+      return {
+        text,
+        symbol
+      }
     }
   }
 }
