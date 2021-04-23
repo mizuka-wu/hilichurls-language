@@ -8,8 +8,10 @@
     <el-row :gutter="8">
       <el-col v-bind="span">
         <el-input
+          autofocus
+          placeholder="请输入丘丘文"
           :maxlength="500"
-          autosize
+          :autosize="{ minRows: 5 }"
           show-word-limit
           style="height: 100%;"
           type="textarea"
@@ -94,7 +96,7 @@ export default {
       },
       loading: null,
       ocr: null,
-      source: 'Muhe ye! Nini zido!',
+      source: '',
       arrayTypeDirectory
     }
   },
