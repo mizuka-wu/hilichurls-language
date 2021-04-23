@@ -41,16 +41,16 @@
         class="result"
         v-bind="span"
       >
-        <div
+        <span
           :key="index"
-          v-for="(line, index) of result"
+          v-for="(segment, index) of result"
         >
           <el-tooltip
             :key="words.text + index"
             class="item"
             effect="dark"
             placement="bottom"
-            v-for="words of line"
+            v-for="words of segment.text"
           >
             <div slot="content">
               <div
@@ -60,7 +60,8 @@
             </div>
             <span :class="{ text: true, hilichurls: words.isHilichurlsLang }">{{ words.text }}</span>
           </el-tooltip>
-        </div>
+          <span v-html="segment.symbol"></span>
+        </span>
       </el-col>
     </el-row>
     <canvas
@@ -116,25 +117,22 @@ export default {
       }, {})
     },
     result ({ source, arrayTypeDirectory, md5Directory }) {
-      return source.split('\n').map(sourceText => arrayTypeDirectory
-        // 将可以替换的部分替换为词典对象的md5
-        .reduce((text, dir) => {
-          return text.replace(dir.text, dir.md5)
-        }, sourceText)
-        .split(' ')
-        .map(item => {
-          const key = item.replace('!', '')
-          if (key in md5Directory) {
-            const data = { ...md5Directory[key], isHilichurlsLang: true }
-            data.text += item.replace(/\w/g, '')
-            return data
-          } else {
-            return {
-              text: item,
-              meaning: [item]
-            }
-          }
-        }))
+      const segments = Array.from(source
+        .matchAll(/(?<text>[\w\s]*)(?<symbol>[\n,!.\s]*)/g))
+        .map(item => item.groups)
+        .filter(item => item.segment !== '' || item.symbol !== '')
+      return segments.map(({ text, symbol }) => ({
+        symbol: symbol.replace('\n', '<br/>'),
+        text: arrayTypeDirectory
+          .reduce((_text, dir) => _text.replace(dir.text, dir.md5), text)
+          .split(' ')
+          .map(md5 => md5Directory[md5] || {
+            text: md5,
+            meaning: [
+              md5
+            ]
+          })
+      }))
     }
   },
   methods: {
