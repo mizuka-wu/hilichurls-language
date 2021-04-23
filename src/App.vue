@@ -65,6 +65,7 @@
       </el-col>
     </el-row>
     <canvas
+      v-if="false"
       height="300"
       id="canvas"
       style="position: fixed;left: 0;top: 0;z-index: 999;"
