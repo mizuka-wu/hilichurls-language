@@ -86,7 +86,7 @@ export default {
       },
       loading: null,
       ocr: null,
-      source: '',
+      source: 'Celi dada, mimi nunu!\nMuhe ye!\nYe dada!\nYa yika!\nNini zido!',
       arrayTypeDirectory
     }
   },
@@ -109,6 +109,7 @@ export default {
           .split(' ')
           .map(md5 => md5Directory[md5] || {
             text: md5,
+            keepOrigin: true,
             meaning: [
               md5
             ]
@@ -235,10 +236,6 @@ body {
 .text {
   margin: 0px 4px;
   padding: 2px 1px;
-}
-
-.hilichurls {
-  border-bottom: 1px dashed #000;
 }
 
 .text:hover {
