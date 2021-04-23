@@ -37,21 +37,7 @@
         <!-- <el-button type="text" icon="el-icon-camera"></el-button> -->
       </el-col>
       <el-col class="result" v-bind="span">
-        <span :key="index" v-for="(segment, index) of result">
-          <el-tooltip
-            :key="words.text + index"
-            class="item"
-            effect="dark"
-            placement="bottom"
-            v-for="words of segment.text"
-          >
-            <div slot="content">
-              <div :key="index" v-for="(meaning, index) of words.meaning">{{ meaning }}</div>
-            </div>
-            <span :class="{ text: true, hilichurls: words.isHilichurlsLang }">{{ words.text }}</span>
-          </el-tooltip>
-          <span v-html="segment.symbol"></span>
-        </span>
+        <TranslationResult :key="index" :segment="segment" v-for="(segment, index) of result" />
       </el-col>
     </el-row>
     <canvas
@@ -71,10 +57,14 @@ import directory from './assets/directory.json'
 import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
+import TranslationResult from './components/TranslationResult'
 
 const LANGUAGE = 'eng+chi_sim'
 
 export default {
+  components: {
+    TranslationResult
+  },
   name: 'App',
   data () {
     const arrayTypeDirectory = Object.keys(directory).reduce((_arrayTypeDirectory, key) => {

@@ -4389,6 +4389,11 @@
   "resolved" "https://registry.npm.taobao.org/graceful-fs/download/graceful-fs-4.2.6.tgz"
   "version" "4.2.6"
 
+"guid@^0.0.12":
+  "integrity" "sha1-kTfFKxhffeEkkLm+vMFmC5Al/gw="
+  "resolved" "https://registry.npmjs.org/guid/-/guid-0.0.12.tgz"
+  "version" "0.0.12"
+
 "gzip-size@^5.0.0":
   "integrity" "sha1-y5vuaS+HwGErIyhAqHOQTkwTUnQ="
   "resolved" "https://registry.npm.taobao.org/gzip-size/download/gzip-size-5.1.1.tgz"
