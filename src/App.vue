@@ -86,7 +86,7 @@ export default {
       },
       loading: null,
       ocr: null,
-      source: 'Celi dada, mimi nunu!\nMuhe ye!\nYe dada!\nYa yika!\nNini zido!',
+      source: '',
       arrayTypeDirectory
     }
   },
