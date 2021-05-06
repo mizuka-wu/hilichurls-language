@@ -80,16 +80,16 @@ export default {
   data () {
     const directoryList = [
       {
-        name: 'B站词典',
-        url: 'https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8',
-        value: 'bilibili',
-        directory: bilibiliDirectory
-      },
-      {
         name: 'Hilipedia丘丘语百科',
         url: 'https://chen_zhanming.gitee.io/hilipedia/',
         value: 'Hilipedia',
         directory: hilipediaDirectory
+      },
+      {
+        name: 'B站词典',
+        url: 'https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8',
+        value: 'bilibili',
+        directory: bilibiliDirectory
       }
     ]
     return {

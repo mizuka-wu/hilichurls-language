@@ -1,6 +1,10 @@
-# 如何获取最新的词典
+# 娱乐项目
 
-[从b站wiki直接转](https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8)
+翻译请以官方为准
+
+## 如何获取最新的词典
+
+### [从b站wiki直接转](https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8)
 
 ```javascript
       Array.from(document.querySelector('.toc-sticky').childNodes)
@@ -37,3 +41,7 @@
           return directory
         }, {})
 ```
+
+### 从丘丘语百科
+
+[丘丘语百科](https://chen_zhanming.gitee.io/hilipedia/)

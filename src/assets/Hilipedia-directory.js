@@ -913,4 +913,12 @@ const DICTIONARY = {
   }
 }
 
-export default DICTIONARY
+export default Object.keys(DICTIONARY.dictionary_proper).reduce((obj, key) => {
+  obj[key] = DICTIONARY
+    .dictionary_proper[key]
+    .def.map(({ pos, zh }) => {
+      const defZh = DICTIONARY.posAbbr[pos] ? `[${DICTIONARY.posAbbr[pos].zh}]` : ''
+      return `${defZh} ${zh}`
+    })
+  return obj
+}, {})
