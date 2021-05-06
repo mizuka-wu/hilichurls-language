@@ -132,13 +132,14 @@ export default {
     },
     result ({ source, arrayTypeDirectory, md5Directory }) {
       const segments = Array.from(source
-        .matchAll(/(?<text>[\w\s]*)(?<symbol>[\n,!.\s]*)/g))
+        .matchAll(/(?<text>[\w\s]*)(?<symbol>[\n,!.\s\\n]*)/g))
         .map(item => item.groups)
         .filter(item => item.segment !== '' || item.symbol !== '')
       return segments.map(({ text, symbol }) => ({
-        symbol: symbol.replace('\n', '<br/>'),
+        symbol: symbol.replace(/\n\\n/g, '<br/>'),
         text: arrayTypeDirectory
-          .reduce((_text, dir) => _text.replace(dir.text, dir.md5), text)
+          .reduce((_text, dir) => _text.replace(dir.text, ` ${dir.md5} `), text)
+          .replace(/\s+/g, ' ')
           .split(' ')
           .map(md5 => md5Directory[md5] || {
             text: md5,

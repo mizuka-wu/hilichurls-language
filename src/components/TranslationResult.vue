@@ -2,11 +2,11 @@
   <span>
     <span class="translated">
       <el-tooltip
-        :key="words.text + guid"
+        :key="words.text + guid + index"
         class="item"
         effect="dark"
         placement="bottom"
-        v-for="words of segmentWithTranslate.text"
+        v-for="(words, index) of segmentWithTranslate.text"
       >
         <div slot="content" class="origin">
           {{ words.text }}

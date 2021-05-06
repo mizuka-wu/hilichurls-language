@@ -8,16 +8,6 @@ const DICTIONARY = {
     //		"origin":词源"
     //		"status":释义的确定性
     //	}
-    a: {
-      def: [
-        {
-          pos: '',
-          zh: ''
-        }
-      ],
-      eg: [],
-      status: 0
-    },
     aba: {
       def: [
         {
@@ -920,5 +910,7 @@ export default Object.keys(DICTIONARY.dictionary_proper).reduce((obj, key) => {
       const defZh = DICTIONARY.posAbbr[pos] ? `[${DICTIONARY.posAbbr[pos].zh}]` : ''
       return `${defZh} ${zh}`
     })
+
+  obj[key.slice(0, 1).toUpperCase() + key.slice(1)] = obj[key]
   return obj
 }, {})
