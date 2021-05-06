@@ -913,4 +913,4 @@ const DICTIONARY = {
   }
 }
 
-export default {}
+export default DICTIONARY

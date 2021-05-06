@@ -1,7 +1,17 @@
 <template>
   <el-card id="app">
     <div class="header" slot="header">
-      <div>丘丘语</div>
+      <div>
+        丘丘语
+        <el-select size="mini" v-model="selectedDirectory">
+          <el-option
+            :label="directoryOption.name"
+            :value="directoryOption.value"
+            v-for="directoryOption of directoryList"
+            :key="directoryOption.value"
+          ></el-option>
+        </el-select>
+      </div>
       <i class="el-icon-d-arrow-right" />
       <div>丘丘语（注释）</div>
     </div>
@@ -53,7 +63,8 @@
 <script>
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import directory from './assets/bilibili-directory.js'
+import bilibiliDirectory from './assets/bilibili-directory.js'
+import hilipediaDirectory from './assets/Hilipedia-directory'
 import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
@@ -67,6 +78,20 @@ export default {
   },
   name: 'App',
   data () {
+    const directoryList = [
+      {
+        name: 'B站词典',
+        url: 'https://wiki.biligame.com/ys/%E7%8E%B0%E4%BB%A3%E4%B8%98%E4%B8%98%E8%AF%AD%E8%AF%8D%E5%85%B8',
+        value: 'bilibili',
+        directory: bilibiliDirectory
+      },
+      {
+        name: 'Hilipedia丘丘语百科',
+        url: 'https://chen_zhanming.gitee.io/hilipedia/',
+        value: 'Hilipedia',
+        directory: hilipediaDirectory
+      }
+    ]
     return {
       span: {
         xs: 24,
@@ -77,10 +102,16 @@ export default {
       loading: null,
       ocr: null,
       source: '',
-      directory
+      selectedDirectory: directoryList[0].value,
+      directoryList
     }
   },
   computed: {
+    directory ({ selectedDirectory }) {
+      return this.directoryList
+        .find(item => item.value === selectedDirectory)
+        .directory
+    },
     arrayTypeDirectory ({ directory }) {
       return Object.keys(directory).reduce((_arrayTypeDirectory, key) => {
         const md5 = sparkMd5.hash(key)
