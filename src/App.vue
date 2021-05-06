@@ -53,7 +53,7 @@
 <script>
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import directory from './assets/directory.json'
+import directory from './assets/bilibili-directory.js'
 import sparkMd5 from 'spark-md5'
 import { createWorker } from 'tesseract.js'
 import { Loading } from 'element-ui'
@@ -67,16 +67,6 @@ export default {
   },
   name: 'App',
   data () {
-    const arrayTypeDirectory = Object.keys(directory).reduce((_arrayTypeDirectory, key) => {
-      const md5 = sparkMd5.hash(key)
-      _arrayTypeDirectory.push({
-        text: key,
-        md5,
-        meaning: directory[key]
-      })
-      return _arrayTypeDirectory
-    }, [])
-      .sort((a, b) => b.text.length - a.text.length)
     return {
       span: {
         xs: 24,
@@ -87,10 +77,22 @@ export default {
       loading: null,
       ocr: null,
       source: '',
-      arrayTypeDirectory
+      directory
     }
   },
   computed: {
+    arrayTypeDirectory ({ directory }) {
+      return Object.keys(directory).reduce((_arrayTypeDirectory, key) => {
+        const md5 = sparkMd5.hash(key)
+        _arrayTypeDirectory.push({
+          text: key,
+          md5,
+          meaning: directory[key]
+        })
+        return _arrayTypeDirectory
+      }, [])
+        .sort((a, b) => b.text.length - a.text.length)
+    },
     md5Directory ({ arrayTypeDirectory }) {
       return arrayTypeDirectory.reduce((obj, { md5, ...dir }) => {
         obj[md5] = dir
